@@ -16,7 +16,7 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
-func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserRequest) (res *proto.RegiserUserResponse, err error) {
+func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserRequest) (res *proto.RegisterUserResponse, err error) {
 
 	invalidMessages, isValid := isDataValid(model.Users{
 		FullName:     req.FullName,
@@ -67,7 +67,7 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 		return nil, helper.Error(codes.Internal, "", err)
 	}
 
-	return &proto.RegiserUserResponse{
+	return &proto.RegisterUserResponse{
 		Id: userId,
 	}, nil
 }

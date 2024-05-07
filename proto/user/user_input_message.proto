@@ -9,3 +9,8 @@ message RegisterUserRequest {
     string phone_number = 3;
     string email = 4;
 }    
+
+message LoginRequest {
+    string password = 1;
+    string email = 2;
+}    

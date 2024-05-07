@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"user-service/config"
 
 	"github.com/go-pg/pg/v10"
 	"google.golang.org/grpc"
@@ -15,4 +16,5 @@ type ServiceApp struct {
 	GrpcClientConn map[string]*grpc.ClientConn
 	ServiceName    string
 	ServiceMode    string
+	Config         config.Config
 }

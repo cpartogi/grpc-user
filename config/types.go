@@ -19,6 +19,6 @@ type DBConfig struct {
 
 type TokenConfig struct {
 	Key                string
-	Expiry             string
-	RefreshTokenExpiry string
+	Expiry             int64
+	RefreshTokenExpiry int64
 }

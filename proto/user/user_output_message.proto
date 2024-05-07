@@ -6,3 +6,11 @@ option go_package = "user-service/pb/user;user";
 message RegisterUserResponse {
     string id = 1;
 }   
+
+message LoginResponse {
+    string id = 1;
+    string token = 2;
+    string token_expired_at = 3;
+    string refresh_token = 4;
+    string refresh_token_expired_at = 5;
+}
