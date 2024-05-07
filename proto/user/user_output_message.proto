@@ -3,6 +3,6 @@ package user;
 
 option go_package = "user-service/pb/user;user";
 
-message RegiserUserResponse {
+message RegisterUserResponse {
     string id = 1;
 }   

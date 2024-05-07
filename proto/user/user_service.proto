@@ -7,5 +7,5 @@ import "user/user_input_message.proto";
 import "user/user_output_message.proto";
 
 service UserService {
-    rpc RegisterUser(RegisterUserRequest) returns (Vehicle) {}
+    rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse) {}
 }    
