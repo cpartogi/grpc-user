@@ -1,0 +1,8 @@
+syntax = "proto3";
+package user;
+
+option go_package = "user-service/pb/user;user";
+
+message RegiserUserResponse {
+    string id = 1;
+}   

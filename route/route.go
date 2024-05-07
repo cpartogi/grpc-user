@@ -4,7 +4,9 @@ import (
 	"user-service/application"
 	"user-service/config"
 
-	"github.com/go-pg/pg"
+	"user-service/pb/user"
+
+	"github.com/go-pg/pg/v10"
 	"google.golang.org/grpc"
 )
 
