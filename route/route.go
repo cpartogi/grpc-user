@@ -6,6 +6,10 @@ import (
 
 	"user-service/pb/user"
 
+	userhandler "user-service/domain/user/handler/grpc"
+	userrepo "user-service/domain/user/repo"
+	userusecase "user-service/domain/user/usecase"
+
 	"github.com/go-pg/pg/v10"
 	"google.golang.org/grpc"
 )
@@ -28,9 +32,9 @@ func GrpcRoute(
 ) {
 	// Handler initiation
 	UserServer := userhandler.NewHandler(
-		userusecase.NewService(
-			vehiclerepo.NewPostgresRepo(log, dbRead, dbWrite),
-		), log,
+		userusecase.NewUserUsecase(
+			userrepo.NewUserRepo(dbRead),
+		),
 	)
 
 	user.RegisterUserServiceServer(grpcServer, UserServer)
