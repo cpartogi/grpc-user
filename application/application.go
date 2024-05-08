@@ -16,5 +16,5 @@ type ServiceApp struct {
 	GrpcClientConn map[string]*grpc.ClientConn
 	ServiceName    string
 	ServiceMode    string
-	Config         config.Config
+	Config         *config.Config
 }

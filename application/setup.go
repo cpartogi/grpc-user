@@ -21,7 +21,6 @@ func Setup(cfg *config.Config, c *cli.Context) (*ServiceApp, error) {
 	app.ServiceName = c.String("name")
 	if err := runInit(
 		initDatabase(cfg),
-		initGrpcServer(cfg),
 		initApp(cfg),
 	)(app); err != nil {
 		return app, err
@@ -54,7 +53,7 @@ func initDatabase(cfg *config.Config) func(*ServiceApp) error {
 	}
 }
 
-func initGrpcServer(cfg *config.Config) func(*ServiceApp) error {
+func initGrpcServer() func(*ServiceApp) error {
 	return func(app *ServiceApp) error {
 		g := grpc.NewServer(
 			grpc.ChainUnaryInterceptor(),
@@ -68,7 +67,7 @@ func initApp(cfg *config.Config) func(*ServiceApp) error {
 	return func(app *ServiceApp) error {
 		switch app.ServiceMode {
 		case "grpc":
-			return initGrpcServer(cfg)(app)
+			return initGrpcServer()(app)
 		}
 		return errors.New("unrecognized mode")
 	}

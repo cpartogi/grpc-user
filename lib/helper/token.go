@@ -47,7 +47,7 @@ func GenerateToken(login model.Users, cfg *config.TokenConfig) (tokenData model.
 
 func GenerateJWT(user model.Users, cfg *config.TokenConfig) (tokenData model.UserToken, err error) {
 
-	exp := time.Now().UTC().Add(10 * time.Minute)
+	exp := time.Now().UTC().Add(time.Duration(cfg.Expiry) * time.Minute)
 	claims := JWTToken{
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().UTC().Unix(),
@@ -80,7 +80,7 @@ func GenerateJWT(user model.Users, cfg *config.TokenConfig) (tokenData model.Use
 
 func GenerateRefresh(user model.Users, cfg *config.TokenConfig) (refreshTokenData model.UserToken, err error) {
 
-	exp := time.Now().UTC().Add(4 * time.Hour)
+	exp := time.Now().UTC().Add(time.Duration(cfg.RefreshTokenExpiry) * time.Hour)
 	claims := JWTToken{
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().UTC().Unix(),

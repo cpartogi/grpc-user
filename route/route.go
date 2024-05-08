@@ -20,7 +20,7 @@ func SetupRoute(cfg *config.Config, app *application.ServiceApp) {
 		GrpcRoute(app.GrpcServer,
 			app.DbRead,
 			app.DbWrite,
-			app.GrpcClientConn, app.Config)
+			app.GrpcClientConn, cfg)
 	}
 }
 
@@ -29,7 +29,7 @@ func GrpcRoute(
 	dbRead *pg.DB,
 	dbWrite *pg.DB,
 	clientConnection map[string]*grpc.ClientConn,
-	config config.Config,
+	config *config.Config,
 ) {
 	// Handler initiation
 	UserServer := userhandler.NewHandler(

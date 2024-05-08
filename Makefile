@@ -1,3 +1,6 @@
+run:
+	go run main.go
+
 init-app:
 	go mod init user-service
 	go mod tidy

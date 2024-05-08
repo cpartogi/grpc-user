@@ -7,10 +7,10 @@ import (
 
 type UserUsecase struct {
 	userRepo user.UserRepoInterface
-	cfg      config.Config
+	cfg      *config.Config
 }
 
-func NewUserUsecase(userRepo user.UserRepoInterface, cfg config.Config) user.UserUsecaseInterface {
+func NewUserUsecase(userRepo user.UserRepoInterface, cfg *config.Config) user.UserUsecaseInterface {
 	return &UserUsecase{
 		userRepo: userRepo,
 		cfg:      cfg,
