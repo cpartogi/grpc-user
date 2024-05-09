@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"user-service/lib/pkg/utils"
 
@@ -11,6 +12,7 @@ func Setup() (*Config, error) {
 
 	if !utils.IsFileOrDirExist("config.toml") {
 		fmt.Println("error config not found")
+		return nil, errors.New("config not found")
 	}
 
 	cfgFile := "config.toml"
