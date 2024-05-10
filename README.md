@@ -37,3 +37,24 @@ make proto-gen
 make run
 ```
 
+## Run Unit Test
+1. Run docker with command : 
+```bash 
+make docker-restart
+```
+2. Data migration for testing with command :
+```bash 
+make test-migration-up
+```
+3. Run mock with command : 
+```bash 
+make mock-gen
+```
+4. Run unit test with command : 
+```bash 
+make test
+```
+5. To view coverage report in browser : 
+```bash 
+make test-coverage
+```
