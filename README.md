@@ -6,6 +6,7 @@
 3. Migrate, for database migration. https://github.com/golang-migrate/migrate
 4. PostgresSQL Database
 5. Mockery for mock in unit test, https://github.com/vektra/mockery
+6. Protobuf, https://grpc.io/docs/protoc-installation/
 
 ## Setup
 1. Git clone this repository
