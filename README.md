@@ -21,6 +21,10 @@ cp config-example.toml config.toml
 ```bash 
 migrate -path migrations -database "postgresql://username:password@host:port/databasename?sslmode=disable" -verbose up
 ```
+6. Generate proto with command : 
+```bash 
+make proto-gen
+```
 
 ## Run Application
 1. Run with command : 
