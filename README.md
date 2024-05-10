@@ -16,12 +16,17 @@ make init-app
 3. Copy appplication config with command : 
 ```bash 
 cp config-example.toml config.toml
+```
 4. Edit `config.toml` file based on your own configuration.
 5. Execute migration with command : 
 ```bash 
 migrate -path migrations -database "postgresql://username:password@host:port/databasename?sslmode=disable" -verbose up
 ```
-6. Generate proto with command : 
+6. Create protobuf folder with command : 
+```bash 
+mkdir pb
+```
+7. Generate proto with command : 
 ```bash 
 make proto-gen
 ```
