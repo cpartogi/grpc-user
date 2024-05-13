@@ -11,13 +11,16 @@ import (
 
 	"user-service/lib/helper"
 
+	logger "user-service/lib/pkg/logger"
+
 	"github.com/go-pg/pg/v10"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 )
 
-func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserRequest) (res *proto.RegisterUserResponse, err error) {
+func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserRequest, requestId string) (res *proto.RegisterUserResponse, err error) {
 
+	functionName := "usecase.RegisterUser"
 	invalidMessages, isValid := isDataValid(model.Users{
 		FullName:     req.FullName,
 		UserPassword: req.Password,
@@ -27,21 +30,24 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 
 	if !isValid {
 		errorMsg := strings.Join(invalidMessages, " , ")
+		logger.GetLogger(functionName, errorMsg, requestId, req, res)
 		return nil, helper.Error(codes.InvalidArgument,
 			"", errors.New(errorMsg))
 	}
 
 	//cek if email exist
-	checkMail, err := u.userRepo.GetUserByEmail(ctx, req.Email)
+	checkMail, err := u.userRepo.GetUserByEmail(ctx, req.Email, requestId)
 
 	if err != nil {
 		if err != pg.ErrNoRows {
+			logger.GetLogger(functionName, err.Error(), requestId, req, res)
 			return nil, helper.Error(codes.Internal,
 				"", err)
 		}
 	}
 
 	if checkMail.Email != "" {
+		logger.GetLogger(functionName, codes.AlreadyExists.String(), requestId, req, res)
 		return nil, helper.Error(codes.AlreadyExists, "", err)
 	}
 
@@ -50,6 +56,7 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 
 	pHash, err := utils.HashPassword(req.Password)
 	if err != nil {
+		logger.GetLogger(functionName, err.Error(), requestId, req, res)
 		return nil, helper.Error(codes.Internal, "", err)
 	}
 
@@ -61,11 +68,14 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 		Email:        req.Email,
 		PhoneNumber:  req.PhoneNumber,
 		UserPassword: req.Password,
-	})
+	}, requestId)
 
 	if err != nil {
+		logger.GetLogger(functionName, err.Error(), requestId, req, res)
 		return nil, helper.Error(codes.Internal, "", err)
 	}
+
+	logger.GetLogger(functionName, "", requestId, req, res)
 
 	return &proto.RegisterUserResponse{
 		Id: userId,

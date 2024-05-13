@@ -27,7 +27,7 @@ func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *
 		return nil, helper.Error(codes.InvalidArgument, "", errors.New(errorMsg))
 	}
 
-	loginData, err := u.userRepo.GetUserByEmail(ctx, req.Email)
+	loginData, err := u.userRepo.GetUserByEmail(ctx, req.Email, "")
 
 	if err != nil {
 		return

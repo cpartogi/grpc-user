@@ -5,6 +5,7 @@ import (
 	"user-service/config"
 
 	"github.com/go-pg/pg/v10"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
@@ -17,4 +18,5 @@ type ServiceApp struct {
 	ServiceName    string
 	ServiceMode    string
 	Config         *config.Config
+	Log            *logrus.Logger
 }

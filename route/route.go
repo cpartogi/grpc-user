@@ -11,6 +11,7 @@ import (
 	userusecase "user-service/domain/user/usecase"
 
 	"github.com/go-pg/pg/v10"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
@@ -20,7 +21,7 @@ func SetupRoute(cfg *config.Config, app *application.ServiceApp) {
 		GrpcRoute(app.GrpcServer,
 			app.DbRead,
 			app.DbWrite,
-			app.GrpcClientConn, cfg)
+			app.GrpcClientConn, cfg, app.Log)
 	}
 }
 
@@ -30,6 +31,7 @@ func GrpcRoute(
 	dbWrite *pg.DB,
 	clientConnection map[string]*grpc.ClientConn,
 	config *config.Config,
+	log *logrus.Logger,
 ) {
 	// Handler initiation
 	UserServer := userhandler.NewHandler(
