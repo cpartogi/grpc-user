@@ -43,7 +43,7 @@ func TestLogin(t *testing.T) {
 	t.Run("Error repo get user by email", func(t *testing.T) {
 		u := usecase.NewUserUsecase(mockRepo, nil)
 
-		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything).Return(model.Users{
+		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
 			FullName:     "b",
 			Email:        "abc@def.com",
@@ -62,7 +62,7 @@ func TestLogin(t *testing.T) {
 	t.Run("Error data not found", func(t *testing.T) {
 		u := usecase.NewUserUsecase(mockRepo, nil)
 
-		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything).Return(model.Users{
+		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "",
 			FullName:     "b",
 			Email:        "abc@def.com",
@@ -81,7 +81,7 @@ func TestLogin(t *testing.T) {
 	t.Run("Error repo insert user log", func(t *testing.T) {
 		u := usecase.NewUserUsecase(mockRepo, nil)
 
-		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything).Return(model.Users{
+		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
 			FullName:     "b",
 			Email:        "abc@def.com",
@@ -102,7 +102,7 @@ func TestLogin(t *testing.T) {
 	t.Run("Error wrong password", func(t *testing.T) {
 		u := usecase.NewUserUsecase(mockRepo, nil)
 
-		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything).Return(model.Users{
+		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
 			FullName:     "b",
 			Email:        "abc@def.com",
@@ -132,7 +132,7 @@ func TestLogin(t *testing.T) {
 		userPassword := "eASd@123"
 		userPassHash, _ := utils.HashPassword(userPassword)
 
-		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything).Return(model.Users{
+		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
 			FullName:     "b",
 			Email:        "abc@def.com",
@@ -162,7 +162,7 @@ func TestLogin(t *testing.T) {
 		userPassword := "eASd@123"
 		userPassHash, _ := utils.HashPassword(userPassword)
 
-		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything).Return(model.Users{
+		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
 			FullName:     "b",
 			Email:        "abc@def.com",
@@ -194,7 +194,7 @@ func TestLogin(t *testing.T) {
 		userPassword := "eASd@123"
 		userPassHash, _ := utils.HashPassword(userPassword)
 
-		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything).Return(model.Users{
+		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
 			FullName:     "b",
 			Email:        "abc@def.com",
