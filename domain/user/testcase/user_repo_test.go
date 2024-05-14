@@ -43,7 +43,7 @@ func TestUserRepo(t *testing.T) {
 			UserPassword: "password123",
 		}
 
-		_, err := repo.InsertUser(ctx, user, "a")
+		_, err := repo.InsertUser(ctx, user)
 
 		assert.Error(t, err)
 	})
@@ -58,14 +58,14 @@ func TestUserRepo(t *testing.T) {
 			UserPassword: "password123",
 		}
 
-		_, err := repo.InsertUser(ctx, user, "a")
+		_, err := repo.InsertUser(ctx, user)
 
 		assert.NoError(t, err)
 	})
 
 	t.Run("Success Get User by Email", func(t *testing.T) {
 
-		_, err := repo.GetUserByEmail(ctx, "john@example.com", "a")
+		_, err := repo.GetUserByEmail(ctx, "john@example.com")
 
 		assert.NoError(t, err)
 	})
