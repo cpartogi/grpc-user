@@ -24,7 +24,7 @@ func NewUserRepo(gopg *pg.DB) user.UserRepoInterface {
 	}
 }
 
-func (r *UserRepo) InsertUser(ctx context.Context, req model.Users, requestId string) (userId string, err error) {
+func (r *UserRepo) InsertUser(ctx context.Context, req model.Users) (userId string, err error) {
 	functionName := "repo.InsertUser"
 
 	query := `INSERT INTO users (id, full_name, email, phone_number, user_password, created_by, created_at) values ('%s', '%s', '%s', '%s','%s', '%s', now())`
@@ -33,33 +33,33 @@ func (r *UserRepo) InsertUser(ctx context.Context, req model.Users, requestId st
 	_, err = r.gopg.ExecContext(ctx, query)
 
 	if err != nil {
-		logger.GetLogger(functionName, err.Error(), requestId, req, nil)
+		logger.GetLogger(ctx, functionName, err.Error(), req, nil)
 		return
 	}
 
-	logger.GetLogger(functionName, "", requestId, req, userId)
+	logger.GetLogger(ctx, functionName, "", req, userId)
 
 	userId = req.Id
 
 	return
 }
 
-func (r *UserRepo) GetUserByEmail(ctx context.Context, email, requestId string) (res model.Users, err error) {
+func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (res model.Users, err error) {
 	functionName := "repo.GetUserByEmail"
 
 	err = r.gopg.ModelContext(ctx, &res).Where("email=?", email).First()
 
 	if err != nil {
 		if err != pg.ErrNoRows {
-			logger.GetLogger(functionName, err.Error(), requestId, email, res)
+			logger.GetLogger(ctx, functionName, err.Error(), email, res)
 			return
 		} else {
-			logger.GetLogger(functionName, "", requestId, email, res)
+			logger.GetLogger(ctx, functionName, "", email, res)
 			return res, nil
 		}
 	}
 
-	logger.GetLogger(functionName, "", requestId, email, res)
+	logger.GetLogger(ctx, functionName, "", email, res)
 
 	return
 }

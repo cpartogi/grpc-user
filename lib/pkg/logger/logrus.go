@@ -1,13 +1,15 @@
 package logger
 
 import (
+	"context"
+	"fmt"
 	"os"
 	"time"
 
 	"github.com/sirupsen/logrus"
 )
 
-func GetLogger(funcName, errMsg, requestId string, req, res interface{}) *logrus.Logger {
+func GetLogger(ctx context.Context, funcName, errMsg string, req, res interface{}) *logrus.Logger {
 
 	log := logrus.New()
 
@@ -15,16 +17,21 @@ func GetLogger(funcName, errMsg, requestId string, req, res interface{}) *logrus
 		TimestampFormat: time.RFC3339Nano,
 	})
 
+	requestID, ok := ctx.Value("requestID").(string)
+	if !ok {
+		fmt.Println("No Request ID in http request")
+	}
+
 	if errMsg != "" {
 		log.WithFields(logrus.Fields{
-			"requestId": requestId,
+			"requestID": requestID,
 			"function":  funcName,
 			"request":   req,
 			"resp":      res,
 		}).Error(errMsg)
 	} else {
 		log.WithFields(logrus.Fields{
-			"requestId": requestId,
+			"requestID": requestID,
 			"function":  funcName,
 			"request":   req,
 			"resp":      res,
