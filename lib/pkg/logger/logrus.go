@@ -2,12 +2,11 @@ package logger
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc/metadata"
 )
 
 const (
@@ -16,28 +15,36 @@ const (
 
 func GetContext(ctx context.Context) (c context.Context) {
 
-	//check requestID
-	_, ok := ctx.Value(requestIDKey).(string)
+	md, ok := metadata.FromIncomingContext(ctx)
 
 	if !ok {
-		return context.WithValue(ctx, requestIDKey, uuid.New().String())
+		return ctx
 	}
 
-	return ctx
+	requestID := md["requestid"]
+
+	return context.WithValue(ctx, requestIDKey, requestID[0])
 }
 
 func GetLogger(ctx context.Context, funcName, errMsg string, req, res interface{}) *logrus.Logger {
 
+	var requestID string
 	log := logrus.New()
 
 	log.SetFormatter(&logrus.JSONFormatter{
 		TimestampFormat: time.RFC3339Nano,
 	})
 
-	requestID, ok := ctx.Value(requestIDKey).(string)
-	if !ok {
-		fmt.Println("No Request ID in http request")
+	md, ok := metadata.FromIncomingContext(ctx)
+
+	if ok {
+		requestID = md["requestid"][0]
 	}
+
+	// requestID, ok := ctx.Value(requestIDKey).(string)
+	// if !ok {
+	// 	fmt.Println("No Request ID in http request")
+	// }
 
 	if errMsg != "" {
 		log.WithFields(logrus.Fields{

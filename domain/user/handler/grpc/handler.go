@@ -21,27 +21,25 @@ func NewHandler(usecase user.UserUsecaseInterface) *Handler {
 
 func (h *Handler) RegisterUser(ctx context.Context, request *proto.RegisterUserRequest) (*proto.RegisterUserResponse, error) {
 	functionName := "handler.RegisterUser"
-	logContext := logger.GetContext(ctx)
 
-	result, err := h.usecase.RegisterUser(logContext, request)
+	result, err := h.usecase.RegisterUser(ctx, request)
 	if err != nil {
-		logger.GetLogger(logContext, functionName, err.Error(), request, result)
+		logger.GetLogger(ctx, functionName, err.Error(), request, result)
 		return nil, err
 	}
 
-	logger.GetLogger(logContext, functionName, "", request, result)
+	logger.GetLogger(ctx, functionName, "", request, result)
 	return result, nil
 }
 
 func (h *Handler) Login(ctx context.Context, request *proto.LoginRequest) (*proto.LoginResponse, error) {
 	functionName := "handler.Login"
-	logContext := logger.GetContext(ctx)
-	result, err := h.usecase.Login(logContext, request)
+	result, err := h.usecase.Login(ctx, request)
 	if err != nil {
-		logger.GetLogger(logContext, functionName, err.Error(), request, result)
+		logger.GetLogger(ctx, functionName, err.Error(), request, result)
 		return nil, err
 	}
 
-	logger.GetLogger(logContext, functionName, "", request, result)
+	logger.GetLogger(ctx, functionName, "", request, result)
 	return result, nil
 }
