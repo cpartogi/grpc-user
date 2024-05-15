@@ -9,23 +9,6 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-const (
-	requestIDKey = "requestID"
-)
-
-func GetContext(ctx context.Context) (c context.Context) {
-
-	md, ok := metadata.FromIncomingContext(ctx)
-
-	if !ok {
-		return ctx
-	}
-
-	requestID := md["requestid"]
-
-	return context.WithValue(ctx, requestIDKey, requestID[0])
-}
-
 func GetLogger(ctx context.Context, funcName, errMsg string, req, res interface{}) *logrus.Logger {
 
 	var requestID string
@@ -40,11 +23,6 @@ func GetLogger(ctx context.Context, funcName, errMsg string, req, res interface{
 	if ok {
 		requestID = md["requestid"][0]
 	}
-
-	// requestID, ok := ctx.Value(requestIDKey).(string)
-	// if !ok {
-	// 	fmt.Println("No Request ID in http request")
-	// }
 
 	if errMsg != "" {
 		log.WithFields(logrus.Fields{
