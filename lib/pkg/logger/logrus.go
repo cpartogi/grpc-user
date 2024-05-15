@@ -6,8 +6,25 @@ import (
 	"os"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
+
+const (
+	requestIDKey = "requestID"
+)
+
+func GetContext(ctx context.Context) (c context.Context) {
+
+	//check requestID
+	_, ok := ctx.Value(requestIDKey).(string)
+
+	if !ok {
+		return context.WithValue(ctx, requestIDKey, uuid.New().String())
+	}
+
+	return ctx
+}
 
 func GetLogger(ctx context.Context, funcName, errMsg string, req, res interface{}) *logrus.Logger {
 
@@ -17,7 +34,7 @@ func GetLogger(ctx context.Context, funcName, errMsg string, req, res interface{
 		TimestampFormat: time.RFC3339Nano,
 	})
 
-	requestID, ok := ctx.Value("requestID").(string)
+	requestID, ok := ctx.Value(requestIDKey).(string)
 	if !ok {
 		fmt.Println("No Request ID in http request")
 	}

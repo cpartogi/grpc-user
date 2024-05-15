@@ -7,8 +7,6 @@ import (
 	proto "user-service/pb/user"
 
 	logger "user-service/lib/pkg/logger"
-
-	"github.com/google/uuid"
 )
 
 type Handler struct {
@@ -21,31 +19,29 @@ func NewHandler(usecase user.UserUsecaseInterface) *Handler {
 	}
 }
 
-const requestIDKey = "requestID"
-
 func (h *Handler) RegisterUser(ctx context.Context, request *proto.RegisterUserRequest) (*proto.RegisterUserResponse, error) {
-	ctx = context.WithValue(ctx, requestIDKey, uuid.New().String())
 	functionName := "handler.RegisterUser"
+	logContext := logger.GetContext(ctx)
 
-	result, err := h.usecase.RegisterUser(ctx, request)
+	result, err := h.usecase.RegisterUser(logContext, request)
 	if err != nil {
-		logger.GetLogger(ctx, functionName, err.Error(), request, result)
+		logger.GetLogger(logContext, functionName, err.Error(), request, result)
 		return nil, err
 	}
 
-	logger.GetLogger(ctx, functionName, "", request, result)
+	logger.GetLogger(logContext, functionName, "", request, result)
 	return result, nil
 }
 
 func (h *Handler) Login(ctx context.Context, request *proto.LoginRequest) (*proto.LoginResponse, error) {
-	ctx = context.WithValue(ctx, requestIDKey, uuid.New().String())
 	functionName := "handler.Login"
-	result, err := h.usecase.Login(ctx, request)
+	logContext := logger.GetContext(ctx)
+	result, err := h.usecase.Login(logContext, request)
 	if err != nil {
-		logger.GetLogger(ctx, functionName, err.Error(), request, result)
+		logger.GetLogger(logContext, functionName, err.Error(), request, result)
 		return nil, err
 	}
 
-	logger.GetLogger(ctx, functionName, "", request, result)
+	logger.GetLogger(logContext, functionName, "", request, result)
 	return result, nil
 }
