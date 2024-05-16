@@ -6,6 +6,7 @@ import (
 	"user-service/domain/user"
 	proto "user-service/pb/user"
 
+	"user-service/lib/helper"
 	logger "user-service/lib/pkg/logger"
 )
 
@@ -21,14 +22,15 @@ func NewHandler(usecase user.UserUsecaseInterface) *Handler {
 
 func (h *Handler) RegisterUser(ctx context.Context, request *proto.RegisterUserRequest) (*proto.RegisterUserResponse, error) {
 	functionName := "handler.RegisterUser"
+	ctxHandler := helper.CheckRequestID(ctx)
 
-	result, err := h.usecase.RegisterUser(ctx, request)
+	result, err := h.usecase.RegisterUser(ctxHandler, request)
 	if err != nil {
-		logger.GetLogger(ctx, functionName, err.Error(), request, result)
+		logger.Log(ctxHandler, functionName, err.Error(), request, result)
 		return nil, err
 	}
 
-	logger.GetLogger(ctx, functionName, "", request, result)
+	logger.Log(ctxHandler, functionName, "", request, result)
 	return result, nil
 }
 
@@ -36,10 +38,10 @@ func (h *Handler) Login(ctx context.Context, request *proto.LoginRequest) (*prot
 	functionName := "handler.Login"
 	result, err := h.usecase.Login(ctx, request)
 	if err != nil {
-		logger.GetLogger(ctx, functionName, err.Error(), request, result)
+		logger.Log(ctx, functionName, err.Error(), request, result)
 		return nil, err
 	}
 
-	logger.GetLogger(ctx, functionName, "", request, result)
+	logger.Log(ctx, functionName, "", request, result)
 	return result, nil
 }

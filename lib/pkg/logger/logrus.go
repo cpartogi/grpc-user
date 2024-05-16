@@ -5,11 +5,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
 )
 
-func GetLogger(ctx context.Context, funcName, errMsg string, req, res interface{}) *logrus.Logger {
+func Log(ctx context.Context, funcName, errMsg string, req, res interface{}) *logrus.Logger {
 
 	var requestID string
 	log := logrus.New()
@@ -18,10 +19,12 @@ func GetLogger(ctx context.Context, funcName, errMsg string, req, res interface{
 		TimestampFormat: time.RFC3339Nano,
 	})
 
-	md, ok := metadata.FromIncomingContext(ctx)
+	md, _ := metadata.FromIncomingContext(ctx)
 
-	if ok {
+	if len(md["requestid"]) > 0 {
 		requestID = md["requestid"][0]
+	} else {
+		requestID = uuid.New().String()
 	}
 
 	if errMsg != "" {

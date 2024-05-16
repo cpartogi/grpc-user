@@ -33,11 +33,11 @@ func (r *UserRepo) InsertUser(ctx context.Context, req model.Users) (userId stri
 	_, err = r.gopg.ExecContext(ctx, query)
 
 	if err != nil {
-		logger.GetLogger(ctx, functionName, err.Error(), req, nil)
+		logger.Log(ctx, functionName, err.Error(), req, nil)
 		return
 	}
 
-	logger.GetLogger(ctx, functionName, "", req, userId)
+	logger.Log(ctx, functionName, "", req, userId)
 
 	userId = req.Id
 
@@ -51,15 +51,15 @@ func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (res model.
 
 	if err != nil {
 		if err != pg.ErrNoRows {
-			logger.GetLogger(ctx, functionName, err.Error(), email, res)
+			logger.Log(ctx, functionName, err.Error(), email, res)
 			return
 		} else {
-			logger.GetLogger(ctx, functionName, "", email, res)
+			logger.Log(ctx, functionName, "", email, res)
 			return res, nil
 		}
 	}
 
-	logger.GetLogger(ctx, functionName, "", email, res)
+	logger.Log(ctx, functionName, "", email, res)
 
 	return
 }

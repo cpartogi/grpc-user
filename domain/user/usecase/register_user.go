@@ -30,7 +30,7 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 
 	if !isValid {
 		errorMsg := strings.Join(invalidMessages, " , ")
-		logger.GetLogger(ctx, functionName, errorMsg, req, res)
+		logger.Log(ctx, functionName, errorMsg, req, res)
 		return nil, helper.Error(codes.InvalidArgument,
 			"", errors.New(errorMsg))
 	}
@@ -40,14 +40,14 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 
 	if err != nil {
 		if err != pg.ErrNoRows {
-			logger.GetLogger(ctx, functionName, err.Error(), req, res)
+			logger.Log(ctx, functionName, err.Error(), req, res)
 			return nil, helper.Error(codes.Internal,
 				"", err)
 		}
 	}
 
 	if checkMail.Email != "" {
-		logger.GetLogger(ctx, functionName, codes.AlreadyExists.String(), req, res)
+		logger.Log(ctx, functionName, codes.AlreadyExists.String(), req, res)
 		return nil, helper.Error(codes.AlreadyExists, "", err)
 	}
 
@@ -56,7 +56,7 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 
 	pHash, err := utils.HashPassword(req.Password)
 	if err != nil {
-		logger.GetLogger(ctx, functionName, err.Error(), req, res)
+		logger.Log(ctx, functionName, err.Error(), req, res)
 		return nil, helper.Error(codes.Internal, "", err)
 	}
 
@@ -71,11 +71,11 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 	})
 
 	if err != nil {
-		logger.GetLogger(ctx, functionName, err.Error(), req, res)
+		logger.Log(ctx, functionName, err.Error(), req, res)
 		return nil, helper.Error(codes.Internal, "", err)
 	}
 
-	logger.GetLogger(ctx, functionName, "", req, res)
+	logger.Log(ctx, functionName, "", req, res)
 
 	return &proto.RegisterUserResponse{
 		Id: userId,
