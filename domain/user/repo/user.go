@@ -65,7 +65,7 @@ func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (res model.
 }
 
 func (r *UserRepo) InsertUserLog(ctx context.Context, req model.UserLogs) (err error) {
-
+	functionName := "repo.InsertUserLog"
 	req.Id = uuid.New().String()
 
 	query := `INSERT INTO user_logs (id, user_id, is_success, login_message, created_at) values ('%s', '%s', '%t', '%s', now())`
@@ -74,15 +74,17 @@ func (r *UserRepo) InsertUserLog(ctx context.Context, req model.UserLogs) (err e
 	_, err = r.gopg.ExecContext(ctx, query)
 
 	if err != nil {
+		logger.Log(ctx, functionName, err.Error(), req, nil)
 		return
 	}
 
+	logger.Log(ctx, functionName, "", req, nil)
 	return
 
 }
 
 func (r *UserRepo) UpsertUserToken(ctx context.Context, req model.UserToken) (err error) {
-
+	functionName := "repo.UpsertUserToken"
 	// check data exist
 	err = r.gopg.ModelContext(ctx, &model.UserToken{}).Where("user_id=?", req.Id).First()
 	var query string
@@ -112,8 +114,10 @@ func (r *UserRepo) UpsertUserToken(ctx context.Context, req model.UserToken) (er
 	_, err = r.gopg.ExecContext(ctx, query)
 
 	if err != nil {
+		logger.Log(ctx, functionName, err.Error(), req, nil)
 		return
 	}
 
+	logger.Log(ctx, functionName, "", req, nil)
 	return
 }

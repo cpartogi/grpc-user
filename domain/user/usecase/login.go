@@ -12,11 +12,13 @@ import (
 
 	"user-service/lib/helper"
 
+	logger "user-service/lib/pkg/logger"
+
 	"google.golang.org/grpc/codes"
 )
 
 func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *proto.LoginResponse, err error) {
-
+	functionName := "usecase.RegisterUser"
 	invalidMessages, isValid := isLoginValid(model.Users{
 		UserPassword: req.Password,
 		Email:        req.Email,
@@ -24,16 +26,19 @@ func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *
 
 	if !isValid {
 		errorMsg := strings.Join(invalidMessages, " , ")
+		logger.Log(ctx, functionName, errorMsg, req, res)
 		return nil, helper.Error(codes.InvalidArgument, "", errors.New(errorMsg))
 	}
 
 	loginData, err := u.userRepo.GetUserByEmail(ctx, req.Email)
 
 	if err != nil {
+		logger.Log(ctx, functionName, err.Error(), req, res)
 		return
 	}
 
 	if loginData.Id == "" {
+		logger.Log(ctx, functionName, "not found", req, res)
 		return nil, helper.Error(codes.NotFound, "", err)
 	}
 
@@ -46,14 +51,16 @@ func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *
 		})
 
 		if err != nil {
+			logger.Log(ctx, functionName, err.Error(), req, res)
 			return nil, helper.Error(codes.Internal, "", err)
 		}
-
+		logger.Log(ctx, functionName, "invalid argument", req, res)
 		return nil, helper.Error(codes.InvalidArgument, "", errors.New(constant.PasswordWrong))
 	}
 
 	token, err := helper.GenerateTokenAndRefreshToken(loginData, &u.cfg.Token)
 	if err != nil {
+		logger.Log(ctx, functionName, err.Error(), req, res)
 		return nil, helper.Error(codes.Internal, "", err)
 	}
 
@@ -64,6 +71,7 @@ func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *
 	})
 
 	if err != nil {
+		logger.Log(ctx, functionName, err.Error(), req, res)
 		return nil, helper.Error(codes.Internal, "", err)
 	}
 
@@ -76,8 +84,11 @@ func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *
 	})
 
 	if err != nil {
+		logger.Log(ctx, functionName, err.Error(), req, res)
 		return nil, helper.Error(codes.Internal, "", err)
 	}
+
+	logger.Log(ctx, functionName, "", req, nil)
 
 	return &proto.LoginResponse{
 		Id:                    loginData.Id,
