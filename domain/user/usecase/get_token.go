@@ -12,8 +12,8 @@ import (
 )
 
 func (u *UserUsecase) GetToken(ctx context.Context, req *proto.GetTokenRequest) (res *proto.LoginResponse, err error) {
-	functionName := "usecase.GetToken"
-	dataToken, err := helper.GetDataFromToken(req.RefershToken, u.cfg)
+	functionName := "user-service.usecase.GetToken"
+	dataToken, err := helper.GetDataFromToken(req.RefreshToken, u.cfg)
 
 	if err != nil {
 		logger.Log(ctx, functionName, "forbidden", req, res)
@@ -53,7 +53,7 @@ func (u *UserUsecase) GetToken(ctx context.Context, req *proto.GetTokenRequest) 
 		Id:             loginData.Id,
 		Token:          token.Token,
 		TokenExpiredAt: token.TokenExpiredAt.Format(time.RFC3339),
-		RefreshToken:   req.RefershToken,
+		RefreshToken:   req.RefreshToken,
 	}
 
 	logger.Log(ctx, functionName, "", nil, nil)

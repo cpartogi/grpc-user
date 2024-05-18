@@ -16,5 +16,5 @@ message LoginRequest {
 }    
 
 message GetTokenRequest {
-    string refersh_token = 1;
+    string refresh_token = 1;
 }
