@@ -20,7 +20,7 @@ import (
 )
 
 func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *proto.LoginResponse, err error) {
-	functionName := "usecase.RegisterUser"
+	functionName := "user-service.usecase.RegisterUser"
 	invalidMessages, isValid := isLoginValid(model.Users{
 		UserPassword: req.Password,
 		Email:        req.Email,

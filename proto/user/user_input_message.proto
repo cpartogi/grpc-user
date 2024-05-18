@@ -14,3 +14,7 @@ message LoginRequest {
     string password = 1;
     string email = 2;
 }    
+
+message GetTokenRequest {
+    string refersh_token = 1;
+}

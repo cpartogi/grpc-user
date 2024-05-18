@@ -25,7 +25,7 @@ func NewUserRepo(gopg *pg.DB) user.UserRepoInterface {
 }
 
 func (r *UserRepo) InsertUser(ctx context.Context, req model.Users) (userId string, err error) {
-	functionName := "repo.InsertUser"
+	functionName := "user-service.repo.InsertUser"
 
 	query := `INSERT INTO users (id, full_name, email, phone_number, user_password, created_by, created_at) values ('%s', '%s', '%s', '%s','%s', '%s', now())`
 	query = fmt.Sprintf(query, req.Id, req.FullName, req.Email, req.PhoneNumber, req.UserPassword, req.Id)
@@ -45,7 +45,7 @@ func (r *UserRepo) InsertUser(ctx context.Context, req model.Users) (userId stri
 }
 
 func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (res model.Users, err error) {
-	functionName := "repo.GetUserByEmail"
+	functionName := "user-service.repo.GetUserByEmail"
 
 	err = r.gopg.ModelContext(ctx, &res).Where("email=?", email).First()
 
@@ -65,7 +65,7 @@ func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (res model.
 }
 
 func (r *UserRepo) InsertUserLog(ctx context.Context, req model.UserLogs) (err error) {
-	functionName := "repo.InsertUserLog"
+	functionName := "user-service.repo.InsertUserLog"
 	req.Id = uuid.New().String()
 
 	query := `INSERT INTO user_logs (id, user_id, is_success, login_message, created_at) values ('%s', '%s', '%t', '%s', now())`
@@ -84,7 +84,7 @@ func (r *UserRepo) InsertUserLog(ctx context.Context, req model.UserLogs) (err e
 }
 
 func (r *UserRepo) UpsertUserToken(ctx context.Context, req model.UserToken) (err error) {
-	functionName := "repo.UpsertUserToken"
+	functionName := "user-service.repo.UpsertUserToken"
 	// check data exist
 	err = r.gopg.ModelContext(ctx, &model.UserToken{}).Where("user_id=?", req.Id).First()
 	var query string
@@ -119,5 +119,20 @@ func (r *UserRepo) UpsertUserToken(ctx context.Context, req model.UserToken) (er
 	}
 
 	logger.Log(ctx, functionName, "", req, nil)
+	return
+}
+
+func (r *UserRepo) GetUserById(ctx context.Context, id string) (res model.Users, err error) {
+	functionName := "user-service.repo.GetUserById"
+	err = r.gopg.ModelContext(ctx, &res).Where("id=?", id).First()
+
+	if err != nil {
+		if err != pg.ErrNoRows {
+			logger.Log(ctx, functionName, err.Error(), id, nil)
+			return
+		}
+	}
+
+	logger.Log(ctx, functionName, "", id, nil)
 	return
 }

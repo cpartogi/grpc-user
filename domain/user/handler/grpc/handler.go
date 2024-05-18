@@ -21,7 +21,7 @@ func NewHandler(usecase user.UserUsecaseInterface) *Handler {
 }
 
 func (h *Handler) RegisterUser(ctx context.Context, request *proto.RegisterUserRequest) (*proto.RegisterUserResponse, error) {
-	functionName := "handler.RegisterUser"
+	functionName := "user-service.handler.RegisterUser"
 	ctxHandler := helper.CheckRequestID(ctx)
 
 	result, err := h.usecase.RegisterUser(ctxHandler, request)
@@ -35,8 +35,20 @@ func (h *Handler) RegisterUser(ctx context.Context, request *proto.RegisterUserR
 }
 
 func (h *Handler) Login(ctx context.Context, request *proto.LoginRequest) (*proto.LoginResponse, error) {
-	functionName := "handler.Login"
+	functionName := "user-service.handler.Login"
 	result, err := h.usecase.Login(ctx, request)
+	if err != nil {
+		logger.Log(ctx, functionName, err.Error(), request, result)
+		return nil, err
+	}
+
+	logger.Log(ctx, functionName, "", request, result)
+	return result, nil
+}
+
+func (h *Handler) GetToken(ctx context.Context, request *proto.GetTokenRequest) (*proto.LoginResponse, error) {
+	functionName := "user-service.handler.GetToken"
+	result, err := h.usecase.GetToken(ctx, request)
 	if err != nil {
 		logger.Log(ctx, functionName, err.Error(), request, result)
 		return nil, err
