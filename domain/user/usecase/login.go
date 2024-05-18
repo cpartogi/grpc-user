@@ -15,6 +15,8 @@ import (
 	logger "user-service/lib/pkg/logger"
 
 	"google.golang.org/grpc/codes"
+
+	"user-service/lib/pkg/encryption"
 )
 
 func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *proto.LoginResponse, err error) {
@@ -30,7 +32,8 @@ func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *
 		return nil, helper.Error(codes.InvalidArgument, "", errors.New(errorMsg))
 	}
 
-	loginData, err := u.userRepo.GetUserByEmail(ctx, req.Email)
+	encryptEmail, _ := encryption.Encrypt(req.Email, u.cfg.Secret)
+	loginData, err := u.userRepo.GetUserByEmail(ctx, encryptEmail)
 
 	if err != nil {
 		logger.Log(ctx, functionName, err.Error(), req, res)

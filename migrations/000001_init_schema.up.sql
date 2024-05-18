@@ -2,7 +2,7 @@ CREATE TABLE users (
 	id uuid NOT NULL,
 	full_name varchar(60) NOT NULL,
     email varchar(100) NOT NULL,
-    phone_number varchar(13) NOT NULL,
+    phone_number varchar(100) NOT NULL,
     user_password varchar(255) NOT NULL,
     created_by varchar(255) NOT NULL,
 	created_at timestamptz NOT NULL,

@@ -16,6 +16,8 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
+
+	"user-service/lib/pkg/encryption"
 )
 
 func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserRequest) (res *proto.RegisterUserResponse, err error) {
@@ -36,7 +38,8 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 	}
 
 	//cek if email exist
-	checkMail, err := u.userRepo.GetUserByEmail(ctx, req.Email)
+	encryptEmail, _ := encryption.Encrypt(req.Email, u.cfg.Secret)
+	checkMail, err := u.userRepo.GetUserByEmail(ctx, encryptEmail)
 
 	if err != nil {
 		if err != pg.ErrNoRows {
@@ -61,12 +64,13 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, req *proto.RegisterUserR
 	}
 
 	req.Password = pHash
+	encryptPhone, _ := encryption.Encrypt(req.PhoneNumber, u.cfg.Secret)
 
 	userId, err := u.userRepo.InsertUser(ctx, model.Users{
 		Id:           id,
 		FullName:     req.FullName,
-		Email:        req.Email,
-		PhoneNumber:  req.PhoneNumber,
+		Email:        encryptEmail,
+		PhoneNumber:  encryptPhone,
 		UserPassword: req.Password,
 	})
 

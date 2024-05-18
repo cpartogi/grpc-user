@@ -7,6 +7,7 @@ type Config struct {
 	}
 	UserDB DBConfig
 	Token  TokenConfig
+	Secret SecretConfig
 }
 
 type DBConfig struct {
@@ -21,4 +22,8 @@ type TokenConfig struct {
 	Key                string
 	Expiry             int64
 	RefreshTokenExpiry int64
+}
+
+type SecretConfig struct {
+	Key string
 }
