@@ -2,13 +2,15 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"time"
 	"user-service/domain/user/model"
-	"user-service/lib/constant"
 	"user-service/lib/helper"
 	proto "user-service/pb/user"
 
 	logger "user-service/lib/pkg/logger"
+
+	"google.golang.org/grpc/codes"
 )
 
 func (u *UserUsecase) GetToken(ctx context.Context, req *proto.GetTokenRequest) (res *proto.LoginResponse, err error) {
@@ -17,7 +19,7 @@ func (u *UserUsecase) GetToken(ctx context.Context, req *proto.GetTokenRequest) 
 
 	if err != nil {
 		logger.Log(ctx, functionName, "forbidden", req, res)
-		return res, constant.ErrForbidden
+		return res, helper.Error(codes.PermissionDenied, "", errors.New("forbidden"))
 	}
 
 	loginData, err := u.userRepo.GetUserById(ctx, dataToken.Id)
@@ -29,7 +31,7 @@ func (u *UserUsecase) GetToken(ctx context.Context, req *proto.GetTokenRequest) 
 
 	if loginData.Id == "" {
 		logger.Log(ctx, functionName, "data not found", req, res)
-		return res, constant.ErrNotFound
+		return res, helper.Error(codes.NotFound, "", errors.New("forbidden"))
 	}
 
 	token, err := helper.GenerateToken(loginData, &u.cfg.Token)
