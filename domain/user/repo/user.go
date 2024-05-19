@@ -3,7 +3,6 @@ package repo
 import (
 	"context"
 	"fmt"
-	"time"
 	"user-service/domain/user"
 
 	"user-service/domain/user/model"
@@ -81,45 +80,6 @@ func (r *UserRepo) InsertUserLog(ctx context.Context, req model.UserLogs) (err e
 	logger.Log(ctx, functionName, "", req, nil)
 	return
 
-}
-
-func (r *UserRepo) UpsertUserToken(ctx context.Context, req model.UserToken) (err error) {
-	functionName := "user-service.repo.UpsertUserToken"
-	// check data exist
-	err = r.gopg.ModelContext(ctx, &model.UserToken{}).Where("user_id=?", req.Id).First()
-	var query string
-	id := uuid.New().String()
-
-	tokenExpiredAt := req.TokenExpiredAt.UTC().Format(time.RFC3339)
-	refreshTokenExpiredAt := req.RefreshTokenExpiredAt.UTC().Format(time.RFC3339)
-
-	if err != nil {
-		if err == pg.ErrNoRows {
-			query = `INSERT INTO user_tokens (id, user_id, token, token_expired_at, refresh_token, refresh_token_expired_at, created_at) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', now()) `
-			query = fmt.Sprintf(query, id, req.Id, req.Token, tokenExpiredAt, req.RefreshToken, refreshTokenExpiredAt)
-		} else {
-			return
-		}
-	} else {
-
-		if req.RefreshToken != "" {
-			query = `UPDATE user_tokens SET  token = '%s', token_expired_at = '%s', refresh_token = '%s',  refresh_token_expired_at = '%s', updated_at = now()  WHERE user_id = '%s' `
-			query = fmt.Sprintf(query, req.Token, tokenExpiredAt, req.RefreshToken, refreshTokenExpiredAt, req.Id)
-		} else {
-			query = `UPDATE user_tokens SET  token = '%s', token_expired_at = '%s', updated_at = now()  WHERE user_id = '%s' `
-			query = fmt.Sprintf(query, req.Token, tokenExpiredAt, req.Id)
-		}
-	}
-
-	_, err = r.gopg.ExecContext(ctx, query)
-
-	if err != nil {
-		logger.Log(ctx, functionName, err.Error(), req, nil)
-		return
-	}
-
-	logger.Log(ctx, functionName, "", req, nil)
-	return
 }
 
 func (r *UserRepo) GetUserById(ctx context.Context, id string) (res model.Users, err error) {

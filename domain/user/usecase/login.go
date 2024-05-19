@@ -78,19 +78,6 @@ func (u *UserUsecase) Login(ctx context.Context, req *proto.LoginRequest) (res *
 		return nil, helper.Error(codes.Internal, "", err)
 	}
 
-	err = u.userRepo.UpsertUserToken(ctx, model.UserToken{
-		Id:                    loginData.Id,
-		Token:                 token.Token,
-		TokenExpiredAt:        token.TokenExpiredAt,
-		RefreshToken:          token.RefreshToken,
-		RefreshTokenExpiredAt: token.RefreshTokenExpiredAt,
-	})
-
-	if err != nil {
-		logger.Log(ctx, functionName, err.Error(), req, res)
-		return nil, helper.Error(codes.Internal, "", err)
-	}
-
 	logger.Log(ctx, functionName, "", req, nil)
 
 	return &proto.LoginResponse{

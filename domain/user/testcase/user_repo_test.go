@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"testing"
-	"time"
 
 	"user-service/domain/user/model"
 	"user-service/domain/user/repo"
@@ -89,55 +88,6 @@ func TestUserRepo(t *testing.T) {
 			UserId:       userId,
 			IsSuccess:    false,
 			LoginMessage: "success",
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("Error UpsertUserToken", func(t *testing.T) {
-
-		err := repo.UpsertUserToken(ctx, model.UserToken{
-			Id:                    "cde",
-			Token:                 "a",
-			TokenExpiredAt:        time.Time{},
-			RefreshToken:          "b",
-			RefreshTokenExpiredAt: time.Time{},
-		})
-
-		assert.Error(t, err)
-	})
-
-	t.Run("Success UpsertUserToken insert", func(t *testing.T) {
-
-		err := repo.UpsertUserToken(ctx, model.UserToken{
-			Id:                    userId,
-			Token:                 "a",
-			TokenExpiredAt:        time.Time{},
-			RefreshToken:          "b",
-			RefreshTokenExpiredAt: time.Time{},
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("succes UpsertUserToken update", func(t *testing.T) {
-
-		err := repo.UpsertUserToken(ctx, model.UserToken{
-			Id:             userId,
-			Token:          "a",
-			TokenExpiredAt: time.Time{},
-		})
-
-		assert.NoError(t, err)
-	})
-
-	t.Run("succes UpsertUserToken update refresh token", func(t *testing.T) {
-
-		err := repo.UpsertUserToken(ctx, model.UserToken{
-			Id:             userId,
-			Token:          "a",
-			RefreshToken:   "b",
-			TokenExpiredAt: time.Time{},
 		})
 
 		assert.NoError(t, err)

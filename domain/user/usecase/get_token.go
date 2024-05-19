@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"time"
-	"user-service/domain/user/model"
 	"user-service/lib/helper"
 	proto "user-service/pb/user"
 
@@ -15,7 +14,7 @@ import (
 
 func (u *UserUsecase) GetToken(ctx context.Context, req *proto.GetTokenRequest) (res *proto.LoginResponse, err error) {
 	functionName := "user-service.usecase.GetToken"
-	dataToken, err := helper.GetDataFromToken(req.RefreshToken, u.cfg)
+	dataToken, expiredAt, err := helper.GetDataFromToken(req.RefreshToken, u.cfg)
 
 	if err != nil {
 		logger.Log(ctx, functionName, "forbidden", req, res)
@@ -40,22 +39,12 @@ func (u *UserUsecase) GetToken(ctx context.Context, req *proto.GetTokenRequest) 
 		return
 	}
 
-	err = u.userRepo.UpsertUserToken(ctx, model.UserToken{
-		Id:             loginData.Id,
-		Token:          token.Token,
-		TokenExpiredAt: token.TokenExpiredAt,
-	})
-
-	if err != nil {
-		logger.Log(ctx, functionName, err.Error(), req, res)
-		return
-	}
-
 	res = &proto.LoginResponse{
-		Id:             loginData.Id,
-		Token:          token.Token,
-		TokenExpiredAt: token.TokenExpiredAt.Format(time.RFC3339),
-		RefreshToken:   req.RefreshToken,
+		Id:                    loginData.Id,
+		Token:                 token.Token,
+		TokenExpiredAt:        token.TokenExpiredAt.Format(time.RFC3339),
+		RefreshToken:          req.RefreshToken,
+		RefreshTokenExpiredAt: expiredAt,
 	}
 
 	logger.Log(ctx, functionName, "", nil, nil)

@@ -11,10 +11,8 @@ import (
 var jwtSigningMethod = jwt.SigningMethodHS256
 
 type JWTToken struct {
-	Id          string `json:"id"`
-	FullName    string `json:"fullName"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phoneNumber"`
+	Id        string `json:"id"`
+	ExpiredAt string `json:"expiredAt"`
 	jwt.StandardClaims
 }
 
@@ -53,10 +51,8 @@ func GenerateJWT(user model.Users, cfg *config.TokenConfig) (tokenData model.Use
 			IssuedAt:  time.Now().UTC().Unix(),
 			ExpiresAt: exp.Unix(),
 		},
-		Id:          user.Id,
-		FullName:    user.FullName,
-		Email:       user.Email,
-		PhoneNumber: user.PhoneNumber,
+		Id:        user.Id,
+		ExpiredAt: exp.Format(time.RFC3339),
 	}
 
 	token := jwt.NewWithClaims(
@@ -86,7 +82,8 @@ func GenerateRefresh(user model.Users, cfg *config.TokenConfig) (refreshTokenDat
 			IssuedAt:  time.Now().UTC().Unix(),
 			ExpiresAt: exp.Unix(),
 		},
-		Id: user.Id,
+		Id:        user.Id,
+		ExpiredAt: exp.Format(time.RFC3339),
 	}
 
 	token := jwt.NewWithClaims(
@@ -123,7 +120,7 @@ func ParseToken(tokenString string, cfg *config.Config) (*jwt.Token, error) {
 	return token, err
 }
 
-func GetDataFromToken(token string, cfg *config.Config) (userData model.Users, err error) {
+func GetDataFromToken(token string, cfg *config.Config) (userData model.Users, expiredAt string, err error) {
 
 	resToken, err := ParseToken(token, cfg)
 	if err != nil {
@@ -133,6 +130,7 @@ func GetDataFromToken(token string, cfg *config.Config) (userData model.Users, e
 	claims := resToken.Claims.(jwt.MapClaims)
 
 	userData.Id = claims["id"].(string)
+	expiredAt = claims["expiredAt"].(string)
 
 	return
 }

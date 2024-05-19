@@ -20,18 +20,4 @@ CREATE TABLE user_logs (
     CONSTRAINT user_logs_pkey PRIMARY KEY (id)
 );
 
-create table user_tokens (
-	id uuid NOT NULL,
-    user_id uuid NOT NULL,
-    token varchar(500),
-    token_expired_at timestamptz NOT NULL,
-    refresh_token varchar(500),
-    refresh_token_expired_at timestamptz NOT NULL,
-	created_at timestamptz NOT NULL,
-    updated_at timestamptz NULL,
-    CONSTRAINT user_tokens_pkey PRIMARY KEY (id)
-);
-
 ALTER TABLE "user_logs" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
-ALTER TABLE "user_tokens" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
