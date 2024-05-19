@@ -14,3 +14,10 @@ message LoginResponse {
     string refresh_token = 4;
     string refresh_token_expired_at = 5;
 }
+
+message UserResponse {
+    string id = 1;
+    string full_name = 2;
+    string phone_number = 3;
+    string email = 4;
+}

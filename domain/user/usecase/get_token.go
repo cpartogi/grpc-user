@@ -30,7 +30,7 @@ func (u *UserUsecase) GetToken(ctx context.Context, req *proto.GetTokenRequest) 
 
 	if loginData.Id == "" {
 		logger.Log(ctx, functionName, "data not found", req, res)
-		return res, helper.Error(codes.NotFound, "", errors.New("forbidden"))
+		return res, helper.Error(codes.NotFound, "", errors.New("not found"))
 	}
 
 	token, err := helper.GenerateToken(loginData, &u.cfg.Token)

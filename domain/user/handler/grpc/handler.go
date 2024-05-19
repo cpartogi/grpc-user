@@ -36,24 +36,42 @@ func (h *Handler) RegisterUser(ctx context.Context, request *proto.RegisterUserR
 
 func (h *Handler) Login(ctx context.Context, request *proto.LoginRequest) (*proto.LoginResponse, error) {
 	functionName := "user-service.handler.Login"
-	result, err := h.usecase.Login(ctx, request)
+	ctxHandler := helper.CheckRequestID(ctx)
+
+	result, err := h.usecase.Login(ctxHandler, request)
 	if err != nil {
 		logger.Log(ctx, functionName, err.Error(), request, result)
 		return nil, err
 	}
 
-	logger.Log(ctx, functionName, "", request, result)
+	logger.Log(ctxHandler, functionName, "", request, result)
 	return result, nil
 }
 
 func (h *Handler) GetToken(ctx context.Context, request *proto.GetTokenRequest) (*proto.LoginResponse, error) {
 	functionName := "user-service.handler.GetToken"
-	result, err := h.usecase.GetToken(ctx, request)
+	ctxHandler := helper.CheckRequestID(ctx)
+
+	result, err := h.usecase.GetToken(ctxHandler, request)
 	if err != nil {
-		logger.Log(ctx, functionName, err.Error(), request, result)
+		logger.Log(ctxHandler, functionName, err.Error(), request, result)
 		return nil, err
 	}
 
-	logger.Log(ctx, functionName, "", request, result)
+	logger.Log(ctxHandler, functionName, "", request, result)
+	return result, nil
+}
+
+func (h *Handler) GetUser(ctx context.Context, request *proto.GetUserRequest) (*proto.UserResponse, error) {
+	functionName := "user-service.handler.GetUser"
+	ctxHandler := helper.CheckRequestID(ctx)
+
+	result, err := h.usecase.GetUser(ctxHandler, request)
+	if err != nil {
+		logger.Log(ctxHandler, functionName, err.Error(), request, result)
+		return nil, err
+	}
+
+	logger.Log(ctxHandler, functionName, "", request, nil)
 	return result, nil
 }

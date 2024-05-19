@@ -10,4 +10,5 @@ service UserService {
     rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse) {}
     rpc Login(LoginRequest) returns (LoginResponse) {}
     rpc GetToken(GetTokenRequest) returns (LoginResponse) {}
+    rpc GetUser(GetUserRequest) returns (UserResponse) {}
 }    

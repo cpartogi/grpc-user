@@ -18,3 +18,7 @@ message LoginRequest {
 message GetTokenRequest {
     string refresh_token = 1;
 }
+
+message GetUserRequest {
+    string user_id = 1;
+}
