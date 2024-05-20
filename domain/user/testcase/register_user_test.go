@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"user-service/config"
 	"user-service/domain/user/mocks"
 	"user-service/domain/user/model"
 
@@ -44,7 +45,11 @@ func TestRegisterUser(t *testing.T) {
 	})
 
 	t.Run("Error get email by user repo", func(t *testing.T) {
-		u := usecase.NewUserUsecase(mockRepo, nil)
+		u := usecase.NewUserUsecase(mockRepo, &config.Config{
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
+			},
+		})
 
 		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
@@ -65,7 +70,11 @@ func TestRegisterUser(t *testing.T) {
 	})
 
 	t.Run("Error email already exist", func(t *testing.T) {
-		u := usecase.NewUserUsecase(mockRepo, nil)
+		u := usecase.NewUserUsecase(mockRepo, &config.Config{
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
+			},
+		})
 
 		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
@@ -86,7 +95,11 @@ func TestRegisterUser(t *testing.T) {
 	})
 
 	t.Run("Error repo insert user", func(t *testing.T) {
-		u := usecase.NewUserUsecase(mockRepo, nil)
+		u := usecase.NewUserUsecase(mockRepo, &config.Config{
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
+			},
+		})
 
 		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{}, nil).Once()
 
@@ -103,7 +116,11 @@ func TestRegisterUser(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
-		u := usecase.NewUserUsecase(mockRepo, nil)
+		u := usecase.NewUserUsecase(mockRepo, &config.Config{
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
+			},
+		})
 
 		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{}, nil).Once()
 

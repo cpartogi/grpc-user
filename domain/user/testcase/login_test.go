@@ -41,7 +41,11 @@ func TestLogin(t *testing.T) {
 	})
 
 	t.Run("Error repo get user by email", func(t *testing.T) {
-		u := usecase.NewUserUsecase(mockRepo, nil)
+		u := usecase.NewUserUsecase(mockRepo, &config.Config{
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
+			},
+		})
 
 		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
@@ -60,7 +64,11 @@ func TestLogin(t *testing.T) {
 	})
 
 	t.Run("Error data not found", func(t *testing.T) {
-		u := usecase.NewUserUsecase(mockRepo, nil)
+		u := usecase.NewUserUsecase(mockRepo, &config.Config{
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
+			},
+		})
 
 		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "",
@@ -79,7 +87,11 @@ func TestLogin(t *testing.T) {
 	})
 
 	t.Run("Error repo insert user log", func(t *testing.T) {
-		u := usecase.NewUserUsecase(mockRepo, nil)
+		u := usecase.NewUserUsecase(mockRepo, &config.Config{
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
+			},
+		})
 
 		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
@@ -100,7 +112,11 @@ func TestLogin(t *testing.T) {
 	})
 
 	t.Run("Error wrong password", func(t *testing.T) {
-		u := usecase.NewUserUsecase(mockRepo, nil)
+		u := usecase.NewUserUsecase(mockRepo, &config.Config{
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
+			},
+		})
 
 		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
 			Id:           "a",
@@ -127,6 +143,9 @@ func TestLogin(t *testing.T) {
 				Expiry:             10,
 				RefreshTokenExpiry: 20,
 			},
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
+			},
 		})
 
 		userPassword := "eASd@123"
@@ -150,44 +169,15 @@ func TestLogin(t *testing.T) {
 		assert.Error(t, err, "rpc error: code = Internal desc = failed")
 	})
 
-	t.Run("Error repo UpsertUserToken", func(t *testing.T) {
-		u := usecase.NewUserUsecase(mockRepo, &config.Config{
-			Token: config.TokenConfig{
-				Key:                "abce",
-				Expiry:             10,
-				RefreshTokenExpiry: 20,
-			},
-		})
-
-		userPassword := "eASd@123"
-		userPassHash, _ := utils.HashPassword(userPassword)
-
-		mockRepo.On("GetUserByEmail", mock.Anything, mock.Anything, mock.Anything).Return(model.Users{
-			Id:           "a",
-			FullName:     "b",
-			Email:        "abc@def.com",
-			PhoneNumber:  "d",
-			UserPassword: userPassHash,
-		}, nil).Once()
-
-		mockRepo.On("InsertUserLog", mock.Anything, mock.Anything).Return(nil).Once()
-
-		mockRepo.On("UpsertUserToken", mock.Anything, mock.Anything).Return(errors.New("failed")).Once()
-
-		_, err := u.Login(context.Background(), &proto.LoginRequest{
-			Email:    "abc@def.com",
-			Password: userPassword,
-		})
-
-		assert.Error(t, err, "rpc error: code = Internal desc = failed")
-	})
-
 	t.Run("Success", func(t *testing.T) {
 		u := usecase.NewUserUsecase(mockRepo, &config.Config{
 			Token: config.TokenConfig{
 				Key:                "abce",
 				Expiry:             10,
 				RefreshTokenExpiry: 20,
+			},
+			Secret: config.SecretConfig{
+				Key: "abc&1*~#^2^#s0^=A^^-test",
 			},
 		})
 

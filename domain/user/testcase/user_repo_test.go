@@ -7,6 +7,7 @@ import (
 
 	"user-service/domain/user/model"
 	"user-service/domain/user/repo"
+	"user-service/lib/helper"
 
 	"github.com/go-pg/pg/v10"
 	"github.com/google/uuid"
@@ -69,6 +70,20 @@ func TestUserRepo(t *testing.T) {
 		assert.NoError(t, err)
 	})
 
+	t.Run("Error Get User by Id", func(t *testing.T) {
+
+		_, err := repo.GetUserById(ctx, helper.GenerateRandomString(125))
+
+		assert.Error(t, err)
+	})
+
+	t.Run("Success get user by id", func(t *testing.T) {
+
+		_, err := repo.GetUserById(ctx, userId)
+
+		assert.NoError(t, err)
+	})
+
 	t.Run("Error Insert user log", func(t *testing.T) {
 
 		err := repo.InsertUserLog(ctx, model.UserLogs{
@@ -93,4 +108,29 @@ func TestUserRepo(t *testing.T) {
 		assert.NoError(t, err)
 	})
 
+	t.Run("Error update user", func(t *testing.T) {
+
+		err := repo.UpdateUser(ctx, model.Users{
+			Id:           "a",
+			FullName:     "b",
+			Email:        "c",
+			PhoneNumber:  "d",
+			UserPassword: "e",
+		}, "d")
+
+		assert.Error(t, err)
+	})
+
+	t.Run("Success update user", func(t *testing.T) {
+
+		err := repo.UpdateUser(ctx, model.Users{
+			Id:           userId,
+			FullName:     "fullname",
+			Email:        "email@example.com",
+			PhoneNumber:  "d",
+			UserPassword: "e",
+		}, "a5a70646-0fbf-4db2-9265-e580f9ce863c")
+
+		assert.NoError(t, err)
+	})
 }
