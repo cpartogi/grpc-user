@@ -12,11 +12,11 @@ func CheckRequestID(ctx context.Context) context.Context {
 
 	md, _ := metadata.FromIncomingContext(ctx)
 
-	if len(md["requestid"]) > 0 {
+	if len(md["request_id"]) > 0 {
 		return ctx
 	} else {
 		requestID := uuid.New().String()
-		md.Append("requestid", requestID)
+		md.Append("request_id", requestID)
 		return metadata.NewIncomingContext(ctx, md)
 	}
 }
@@ -24,8 +24,8 @@ func CheckRequestID(ctx context.Context) context.Context {
 func CheckUserId(ctx context.Context) (userId string, err error) {
 	md, _ := metadata.FromIncomingContext(ctx)
 
-	if len(md["userid"]) > 0 {
-		userId = md["userid"][0]
+	if len(md["user_id"]) > 0 {
+		userId = md["user_id"][0]
 		return
 	} else {
 		return userId, errors.New("failed get metadata")

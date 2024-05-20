@@ -7,6 +7,8 @@ import (
 	logger "user-service/lib/pkg/logger"
 	proto "user-service/pb/user"
 
+	"user-service/lib/pkg/encryption"
+
 	"google.golang.org/grpc/codes"
 )
 
@@ -33,11 +35,15 @@ func (u *UserUsecase) GetUser(ctx context.Context, req *proto.GetUserRequest) (r
 		return res, helper.Error(codes.NotFound, "", errors.New("not found"))
 	}
 
+	//decrypt confidential data
+	decryptEmail, _ := encryption.Decrypt(result.Email, u.cfg.Secret)
+	decryptPhone, _ := encryption.Decrypt(result.PhoneNumber, u.cfg.Secret)
+
 	res = &proto.UserResponse{
 		Id:          result.Id,
 		FullName:    result.FullName,
-		PhoneNumber: result.PhoneNumber,
-		Email:       result.Email,
+		PhoneNumber: decryptPhone,
+		Email:       decryptEmail,
 	}
 
 	return

@@ -21,8 +21,8 @@ func Log(ctx context.Context, funcName, errMsg string, req, res interface{}) *lo
 
 	md, _ := metadata.FromIncomingContext(ctx)
 
-	if len(md["requestid"]) > 0 {
-		requestID = md["requestid"][0]
+	if len(md["request_id"]) > 0 {
+		requestID = md["request_id"][0]
 	} else {
 		requestID = uuid.New().String()
 	}

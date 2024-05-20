@@ -13,3 +13,6 @@ Database="postgres"
 Key="privatekey"
 Expiry=10
 RefreshTokenExpiry=5
+
+[Secret]
+Key="abc&1*~#^2^#s0^=A^^7%b34"
