@@ -15,12 +15,19 @@ import (
 func (u *UserUsecase) GetUser(ctx context.Context, req *proto.GetUserRequest) (res *proto.UserResponse, err error) {
 	functionName := "user-service.usecase.GetUser"
 
-	//check metadata user
-	userId, err := helper.CheckUserId(ctx)
+	var userId string
 
-	if err != nil {
-		logger.Log(ctx, functionName, err.Error(), nil, nil)
-		return res, helper.Error(codes.InvalidArgument, "", errors.New("invalid metadata"))
+	if req.UserId != "" {
+		userId = req.UserId
+	} else {
+		//check metadata user
+		userId, err = helper.CheckUserId(ctx)
+
+		if err != nil {
+			logger.Log(ctx, functionName, err.Error(), nil, nil)
+			return res, helper.Error(codes.InvalidArgument, "", errors.New("invalid metadata"))
+		}
+
 	}
 
 	result, err := u.userRepo.GetUserById(ctx, userId)
