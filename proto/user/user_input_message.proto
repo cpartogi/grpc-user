@@ -22,3 +22,10 @@ message GetTokenRequest {
 message GetUserRequest {
     string user_id = 1;
 }
+
+message UpdateUserRequest {
+    string user_id = 1;
+    string full_name = 2;
+    string password = 3;
+    string phone_number = 4;
+}    

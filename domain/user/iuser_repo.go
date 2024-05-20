@@ -10,4 +10,5 @@ type UserRepoInterface interface {
 	GetUserByEmail(ctx context.Context, email string) (res model.Users, err error)
 	InsertUserLog(ctx context.Context, req model.UserLogs) (err error)
 	GetUserById(ctx context.Context, id string) (res model.Users, err error)
+	UpdateUser(ctx context.Context, req model.Users, userId string) (err error)
 }

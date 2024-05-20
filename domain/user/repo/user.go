@@ -96,3 +96,20 @@ func (r *UserRepo) GetUserById(ctx context.Context, id string) (res model.Users,
 	logger.Log(ctx, functionName, "", id, nil)
 	return
 }
+
+func (r *UserRepo) UpdateUser(ctx context.Context, req model.Users, userId string) (err error) {
+	functionName := "user-service.repo.UpdateUser"
+
+	query := `UPDATE users SET full_name  = '%s', phone_number = '%s', user_password  = '%s', updated_at = now(), updated_by = '%s' WHERE id = '%s' `
+	query = fmt.Sprintf(query, req.FullName, req.PhoneNumber, req.UserPassword, req.Id, userId)
+
+	_, err = r.gopg.ExecContext(ctx, query)
+
+	if err != nil {
+		logger.Log(ctx, functionName, err.Error(), req, nil)
+		return
+	}
+
+	logger.Log(ctx, functionName, "", req, nil)
+	return
+}

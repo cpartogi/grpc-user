@@ -75,3 +75,17 @@ func (h *Handler) GetUser(ctx context.Context, request *proto.GetUserRequest) (*
 	logger.Log(ctxHandler, functionName, "", request, nil)
 	return result, nil
 }
+
+func (h *Handler) UpdateUser(ctx context.Context, request *proto.UpdateUserRequest) (*proto.UpdateUserResponse, error) {
+	functionName := "user-service.handler.UpdateUser"
+	ctxHandler := helper.CheckRequestID(ctx)
+
+	result, err := h.usecase.UpdateUser(ctxHandler, request)
+	if err != nil {
+		logger.Log(ctxHandler, functionName, err.Error(), request, result)
+		return nil, err
+	}
+
+	logger.Log(ctxHandler, functionName, "", request, nil)
+	return result, nil
+}

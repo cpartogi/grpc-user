@@ -11,4 +11,5 @@ type UserUsecaseInterface interface {
 	Login(ctx context.Context, req *proto.LoginRequest) (res *proto.LoginResponse, err error)
 	GetToken(ctx context.Context, req *proto.GetTokenRequest) (res *proto.LoginResponse, err error)
 	GetUser(ctx context.Context, req *proto.GetUserRequest) (res *proto.UserResponse, err error)
+	UpdateUser(ctx context.Context, req *proto.UpdateUserRequest) (res *proto.UpdateUserResponse, err error)
 }

@@ -53,6 +53,8 @@ func (u *UserUsecase) GetUser(ctx context.Context, req *proto.GetUserRequest) (r
 		Email:       decryptEmail,
 	}
 
+	logger.Log(ctx, functionName, "", nil, nil)
+
 	return
 
 }

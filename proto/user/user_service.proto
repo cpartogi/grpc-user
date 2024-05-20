@@ -11,4 +11,5 @@ service UserService {
     rpc Login(LoginRequest) returns (LoginResponse) {}
     rpc GetToken(GetTokenRequest) returns (LoginResponse) {}
     rpc GetUser(GetUserRequest) returns (UserResponse) {}
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
 }    
